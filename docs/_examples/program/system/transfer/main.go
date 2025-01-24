@@ -4,11 +4,11 @@ import (
 	"context"
 	"log"
 
-	"github.com/blocto/solana-go-sdk/client"
-	"github.com/blocto/solana-go-sdk/common"
-	"github.com/blocto/solana-go-sdk/program/system"
-	"github.com/blocto/solana-go-sdk/rpc"
-	"github.com/blocto/solana-go-sdk/types"
+	"github.com/qazxcvio/solana-go-sdk/client"
+	"github.com/qazxcvio/solana-go-sdk/common"
+	"github.com/qazxcvio/solana-go-sdk/program/system"
+	"github.com/qazxcvio/solana-go-sdk/rpc"
+	"github.com/qazxcvio/solana-go-sdk/types"
 )
 
 // FUarP2p5EnxD66vVDL4PWRoWMzA56ZVHG24hpEDFShEz

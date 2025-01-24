@@ -3,7 +3,7 @@ package client
 import (
 	"context"
 
-	"github.com/blocto/solana-go-sdk/rpc"
+	"github.com/qazxcvio/solana-go-sdk/rpc"
 )
 
 // GetSlotLeaders returns the slot leaders for a given slot range

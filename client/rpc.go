@@ -5,8 +5,8 @@ import (
 	"fmt"
 	"strconv"
 
-	"github.com/blocto/solana-go-sdk/common"
-	"github.com/blocto/solana-go-sdk/rpc"
+	"github.com/qazxcvio/solana-go-sdk/common"
+	"github.com/qazxcvio/solana-go-sdk/rpc"
 )
 
 func process[A any, B any](fetch func() (rpc.JsonRpcResponse[A], error), convert func(A) (B, error)) (B, error) {

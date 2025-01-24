@@ -4,7 +4,7 @@ import (
 	"context"
 	"testing"
 
-	"github.com/blocto/solana-go-sdk/internal/client_test"
+	"github.com/qazxcvio/solana-go-sdk/internal/client_test"
 )
 
 func TestClient_GetSlotLeaders(t *testing.T) {

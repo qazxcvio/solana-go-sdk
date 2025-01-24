@@ -4,12 +4,12 @@ import (
 	"context"
 	"testing"
 
-	"github.com/blocto/solana-go-sdk/common"
-	"github.com/blocto/solana-go-sdk/internal/client_test"
-	"github.com/blocto/solana-go-sdk/pkg/pointer"
-	"github.com/blocto/solana-go-sdk/rpc"
-	"github.com/blocto/solana-go-sdk/types"
 	"github.com/mr-tron/base58"
+	"github.com/qazxcvio/solana-go-sdk/common"
+	"github.com/qazxcvio/solana-go-sdk/internal/client_test"
+	"github.com/qazxcvio/solana-go-sdk/pkg/pointer"
+	"github.com/qazxcvio/solana-go-sdk/rpc"
+	"github.com/qazxcvio/solana-go-sdk/types"
 )
 
 func TestClient_GetTransaction(t *testing.T) {

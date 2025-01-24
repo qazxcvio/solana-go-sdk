@@ -4,9 +4,9 @@ import (
 	"context"
 	"log"
 
-	"github.com/blocto/solana-go-sdk/client"
-	"github.com/blocto/solana-go-sdk/rpc"
 	"github.com/davecgh/go-spew/spew"
+	"github.com/qazxcvio/solana-go-sdk/client"
+	"github.com/qazxcvio/solana-go-sdk/rpc"
 )
 
 func main() {

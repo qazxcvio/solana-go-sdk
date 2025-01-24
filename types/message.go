@@ -7,8 +7,8 @@ import (
 	"sort"
 	"strconv"
 
-	"github.com/blocto/solana-go-sdk/common"
-	"github.com/blocto/solana-go-sdk/pkg/bincode"
+	"github.com/qazxcvio/solana-go-sdk/common"
+	"github.com/qazxcvio/solana-go-sdk/pkg/bincode"
 
 	"github.com/mr-tron/base58"
 )

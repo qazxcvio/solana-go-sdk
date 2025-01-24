@@ -1,9 +1,9 @@
 package cmptbdgprog
 
 import (
-	"github.com/blocto/solana-go-sdk/common"
-	"github.com/blocto/solana-go-sdk/types"
 	"github.com/near/borsh-go"
+	"github.com/qazxcvio/solana-go-sdk/common"
+	"github.com/qazxcvio/solana-go-sdk/types"
 )
 
 type Instruction borsh.Enum
