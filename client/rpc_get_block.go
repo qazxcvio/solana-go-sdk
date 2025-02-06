@@ -22,7 +22,7 @@ func (c GetBlockConfig) toRpc() rpc.GetBlockConfig {
 		Commitment:                     c.Commitment,
 		TransactionDetails:             c.TransactionDetails,
 		Rewards:                        c.Rewards,
-		Encoding:                       rpc.GetBlockConfigEncodingBase64,
+		Encoding:                       rpc.GetBlockConfigEncodingJsonParsed,
 		MaxSupportedTransactionVersion: pointer.Get[uint8](0),
 	}
 }
@@ -56,10 +56,10 @@ func (c *Client) GetBlock(ctx context.Context, slot uint64) (*Block, error) {
 	)
 }
 
-func (c *Client) GetBlockWithConfig(ctx context.Context, slot uint64, cfg GetBlockConfig) (*Block, error) {
+func (c *Client) GetBlockWithConfig(ctx context.Context, slot uint64, cfg rpc.GetBlockConfig) (*Block, error) {
 	return process(
 		func() (rpc.JsonRpcResponse[*rpc.GetBlock], error) {
-			return c.RpcClient.GetBlockWithConfig(ctx, slot, cfg.toRpc())
+			return c.RpcClient.GetBlockWithConfig(ctx, slot, cfg)
 		},
 		convertBlock,
 	)
@@ -84,6 +84,11 @@ func convertBlock(v *rpc.GetBlock) (*Block, error) {
 			if err != nil {
 				return nil, fmt.Errorf("failed to convert transaction meta, err: %v", err)
 			}
+
+			//vtxAny, ok := vtx.Transaction.(types.Transaction)
+			//if !ok {
+			//	fmt.Println("类型转换失败")
+			//}
 
 			tx, accountKeys, err := parseBase64Tx(vtx.Transaction, transactionMeta)
 			if err != nil {

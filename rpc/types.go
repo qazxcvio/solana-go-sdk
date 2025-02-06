@@ -50,6 +50,7 @@ type TokenAccountBalance struct {
 	Amount         string `json:"amount"`
 	Decimals       uint8  `json:"decimals"`
 	UIAmountString string `json:"uiAmountString"`
+	UIAmount       any    `json:"uiAmount"`
 }
 
 type ReturnData struct {
