@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"io"
 	"net/http"
+	"runtime"
 )
 
 const (
@@ -134,6 +135,24 @@ func preparePayload(params []any) ([]byte, error) {
 	return j, nil
 }
 
+//func call[T any](c *RpcClient, ctx context.Context, params ...any) (T, error) {
+//	var output T
+//
+//	// rpc call
+//	body, err := c.Call(ctx, params...)
+//	if err != nil {
+//		return output, fmt.Errorf("rpc: call error, err: %v, body: %v", err, string(body))
+//	}
+//
+//	// transfer data
+//	err = json.Unmarshal(body, &output)
+//	if err != nil {
+//		return output, fmt.Errorf("rpc: failed to json decode body, err: %v", err)
+//	}
+//
+//	return output, nil
+//}
+
 func call[T any](c *RpcClient, ctx context.Context, params ...any) (T, error) {
 	var output T
 
@@ -143,11 +162,18 @@ func call[T any](c *RpcClient, ctx context.Context, params ...any) (T, error) {
 		return output, fmt.Errorf("rpc: call error, err: %v, body: %v", err, string(body))
 	}
 
-	// transfer data
-	err = json.Unmarshal(body, &output)
-	if err != nil {
+	// Use streaming JSON decoding
+	decoder := json.NewDecoder(bytes.NewReader(body))
+
+	// Incrementally decode the JSON response
+	if err := decoder.Decode(&output); err != nil {
+		if err == io.EOF {
+			// No content to decode
+			return output, nil
+		}
 		return output, fmt.Errorf("rpc: failed to json decode body, err: %v", err)
 	}
+	defer runtime.GC()
 
 	return output, nil
 }

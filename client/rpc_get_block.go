@@ -103,10 +103,10 @@ func convertBlock(v *rpc.GetBlock) (*Block, error) {
 		}
 	}
 
-	var rewards []Reward
-	if len(v.Rewards) > 0 {
-		rewards = convertRewards(v.Rewards)
-	}
+	//var rewards []Reward
+	//if len(v.Rewards) > 0 {
+	//	rewards = convertRewards(v.Rewards)
+	//}
 
 	return &Block{
 		Blockhash:         v.Blockhash,
@@ -116,6 +116,6 @@ func convertBlock(v *rpc.GetBlock) (*Block, error) {
 		ParentSlot:        v.ParentSlot,
 		Transactions:      txs,
 		Signatures:        v.Signatures,
-		Rewards:           rewards,
+		//Rewards:           rewards,
 	}, nil
 }

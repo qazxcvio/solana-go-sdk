@@ -5,7 +5,6 @@ import (
 	"encoding/base64"
 	"fmt"
 
-	"github.com/mr-tron/base58"
 	"github.com/qazxcvio/solana-go-sdk/common"
 	"github.com/qazxcvio/solana-go-sdk/pkg/pointer"
 	"github.com/qazxcvio/solana-go-sdk/rpc"
@@ -108,66 +107,66 @@ func convertTransactionMeta(meta *rpc.TransactionMeta) (*TransactionMeta, error)
 		return nil, nil
 	}
 
-	innerInstructions := make([]InnerInstruction, 0, len(meta.InnerInstructions))
-	for _, metaInnerInstruction := range meta.InnerInstructions {
-		compiledInstructions := make([]types.CompiledInstruction, 0, len(metaInnerInstruction.Instructions))
-		for _, innerInstruction := range metaInnerInstruction.Instructions {
-			parsedInstruction, ok := innerInstruction.(map[string]any)
-			if !ok {
-				return nil, fmt.Errorf("failed to convert inner instruction type. value: %v", innerInstruction)
-			}
+	//innerInstructions := make([]InnerInstruction, 0, len(meta.InnerInstructions))
+	//for _, metaInnerInstruction := range meta.InnerInstructions {
+	//	compiledInstructions := make([]types.CompiledInstruction, 0, len(metaInnerInstruction.Instructions))
+	//	for _, innerInstruction := range metaInnerInstruction.Instructions {
+	//		parsedInstruction, ok := innerInstruction.(map[string]any)
+	//		if !ok {
+	//			return nil, fmt.Errorf("failed to convert inner instruction type. value: %v", innerInstruction)
+	//		}
+	//
+	//		rawAccounts, ok := parsedInstruction["accounts"].([]any)
+	//		if !ok {
+	//			return nil, fmt.Errorf("failed to parse instruction accounts")
+	//		}
+	//		accounts := make([]int, 0, len(rawAccounts))
+	//		for _, v := range rawAccounts {
+	//			accounts = append(accounts, int(v.(float64)))
+	//		}
+	//
+	//		var data []byte
+	//		var err error
+	//		if dataString := parsedInstruction["data"].(string); len(dataString) > 0 {
+	//			data, err = base58.Decode(dataString)
+	//			if err != nil {
+	//				return nil, fmt.Errorf("failed to base58 decode data, data: %v, err: %v", parsedInstruction["data"], err)
+	//			}
+	//		}
+	//
+	//		compiledInstructions = append(compiledInstructions, types.CompiledInstruction{
+	//			ProgramIDIndex: int(parsedInstruction["programIdIndex"].(float64)),
+	//			Accounts:       accounts,
+	//			Data:           data,
+	//		})
+	//	}
+	//
+	//	innerInstructions = append(innerInstructions, InnerInstruction{
+	//		Index:        metaInnerInstruction.Index,
+	//		Instructions: compiledInstructions,
+	//	})
+	//}
 
-			rawAccounts, ok := parsedInstruction["accounts"].([]any)
-			if !ok {
-				return nil, fmt.Errorf("failed to parse instruction accounts")
-			}
-			accounts := make([]int, 0, len(rawAccounts))
-			for _, v := range rawAccounts {
-				accounts = append(accounts, int(v.(float64)))
-			}
-
-			var data []byte
-			var err error
-			if dataString := parsedInstruction["data"].(string); len(dataString) > 0 {
-				data, err = base58.Decode(dataString)
-				if err != nil {
-					return nil, fmt.Errorf("failed to base58 decode data, data: %v, err: %v", parsedInstruction["data"], err)
-				}
-			}
-
-			compiledInstructions = append(compiledInstructions, types.CompiledInstruction{
-				ProgramIDIndex: int(parsedInstruction["programIdIndex"].(float64)),
-				Accounts:       accounts,
-				Data:           data,
-			})
-		}
-
-		innerInstructions = append(innerInstructions, InnerInstruction{
-			Index:        metaInnerInstruction.Index,
-			Instructions: compiledInstructions,
-		})
-	}
-
-	var returnData *ReturnData
-	if v := meta.ReturnData; v != nil {
-		d, err := convertReturnData(*v)
-		if err != nil {
-			return nil, fmt.Errorf("failed to process return data, err: %v", err)
-		}
-		returnData = &d
-	}
+	//var returnData *ReturnData
+	//if v := meta.ReturnData; v != nil {
+	//	d, err := convertReturnData(*v)
+	//	if err != nil {
+	//		return nil, fmt.Errorf("failed to process return data, err: %v", err)
+	//	}
+	//	returnData = &d
+	//}
 
 	return &TransactionMeta{
-		Err:                  meta.Err,
-		Fee:                  meta.Fee,
-		PreBalances:          meta.PreBalances,
-		PostBalances:         meta.PostBalances,
-		PreTokenBalances:     meta.PreTokenBalances,
-		PostTokenBalances:    meta.PostTokenBalances,
-		LogMessages:          meta.LogMessages,
-		InnerInstructions:    innerInstructions,
-		LoadedAddresses:      meta.LoadedAddresses,
-		ReturnData:           returnData,
+		Err:               meta.Err,
+		Fee:               meta.Fee,
+		PreBalances:       meta.PreBalances,
+		PostBalances:      meta.PostBalances,
+		PreTokenBalances:  meta.PreTokenBalances,
+		PostTokenBalances: meta.PostTokenBalances,
+		//LogMessages:          meta.LogMessages,
+		//InnerInstructions:    innerInstructions,
+		//LoadedAddresses:      meta.LoadedAddresses,
+		//ReturnData:           returnData,
 		ComputeUnitsConsumed: meta.ComputeUnitsConsumed,
 	}, nil
 }
