@@ -12,7 +12,7 @@ type GetBlock struct {
 	ParentSlot        uint64                `json:"parentSlot"`
 	Transactions      []GetBlockTransaction `json:"transactions"`
 	Signatures        []string              `json:"signatures"`
-	Rewards           []Reward              `json:"rewards"`
+	//Rewards           []Reward              `json:"rewards"`
 }
 
 type GetBlockTransaction struct {
