@@ -11,19 +11,19 @@ import (
 )
 
 var jsoni = jsoniter.Config{
-	EscapeHTML:             false, // 禁用 HTML 转义
-	SortMapKeys:            false, // 禁止排序 Map 键
-	ValidateJsonRawMessage: true,  // 校验 RawMessage
-	UseNumber:              true,  // 避免 float64 转换
-	DisallowUnknownFields:  true,  // 禁止未知字段
-	CaseSensitive:          true,  // 区分大小写（减少匹配开销）
+	//EscapeHTML:             false, // 禁用 HTML 转义
+	//SortMapKeys:            false, // 禁止排序 Map 键
+	//ValidateJsonRawMessage: true,  // 校验 RawMessage
+	//UseNumber:              true,  // 避免 float64 转换
+	//DisallowUnknownFields:  true,  // 禁止未知字段
+	//CaseSensitive:          true,  // 区分大小写（减少匹配开销）
 
-	//EscapeHTML:             false,
-	//SortMapKeys:            false,
-	//ValidateJsonRawMessage: true,
-	//UseNumber:              true, // 避免 float64 转换
-	//DisallowUnknownFields:  true, // 禁止未知字段
-	//TagKey:                 "json",
+	EscapeHTML:                    false,
+	MarshalFloatWith6Digits:       true,
+	ObjectFieldMustBeSimpleString: true,
+	CaseSensitive:                 true,
+	OnlyTaggedField:               false,
+	ValidateJsonRawMessage:        false,
 }.Froze()
 
 const (
