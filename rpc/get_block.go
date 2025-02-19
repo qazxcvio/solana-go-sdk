@@ -2,7 +2,6 @@ package rpc
 
 import (
 	"context"
-	"encoding/json"
 )
 
 type GetBlockResponse JsonRpcResponse[GetBlock]
@@ -18,10 +17,23 @@ type GetBlock struct {
 	//Rewards           []Reward              `json:"rewards"`
 }
 
+type AccountKey struct {
+	Pubkey string `json:"pubkey"`
+	Signer bool   `json:"signer"`
+	Source string `json:"source"`
+}
+
+type rpcTxTransaction struct {
+	Message struct {
+		AccountKeys []AccountKey `json:"accountKeys"`
+	} `json:"message"`
+	Signatures []string `json:"signatures"`
+}
+
 type GetBlockTransaction struct {
-	Transaction json.RawMessage  `json:"transaction"` // 延迟解析
+	Transaction rpcTxTransaction `json:"transaction"` // 延迟解析
 	Meta        *TransactionMeta `json:"meta"`
-	Version     json.RawMessage  `json:"version"` // 延迟解析
+	//Version     json.RawMessage  `json:"version"` // 延迟解析
 }
 
 type GetBlockConfig struct {
