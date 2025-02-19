@@ -5,10 +5,19 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"github.com/json-iterator/go"
 	"io"
 	"net/http"
-	"runtime"
 )
+
+var jsoni = jsoniter.Config{
+	EscapeHTML:                    false,
+	MarshalFloatWith6Digits:       true,
+	ObjectFieldMustBeSimpleString: true,
+	CaseSensitive:                 true,
+	OnlyTaggedField:               false,
+	ValidateJsonRawMessage:        false,
+}.Froze()
 
 const (
 	LocalnetRPCEndpoint = "http://localhost:8899"
@@ -121,6 +130,37 @@ func (c *RpcClient) Call(ctx context.Context, params ...any) ([]byte, error) {
 	return body, nil
 }
 
+func (c *RpcClient) CallStream(ctx context.Context, params ...any) (io.ReadCloser, error) {
+	// 准备请求负载
+	j, err := preparePayload(params)
+	if err != nil {
+		return nil, fmt.Errorf("failed to prepare payload, err: %v", err)
+	}
+
+	// 创建请求
+	req, err := http.NewRequestWithContext(ctx, "POST", c.endpoint, bytes.NewBuffer(j))
+	if err != nil {
+		return nil, fmt.Errorf("failed to create request, err: %v", err)
+	}
+	req.Header.Add("Content-Type", "application/json")
+
+	// 发送请求
+	res, err := c.httpClient.Do(req)
+	if err != nil {
+		return nil, fmt.Errorf("request failed, err: %v", err)
+	}
+
+	// 检查状态码
+	if res.StatusCode < 200 || res.StatusCode > 300 {
+		defer res.Body.Close()
+		body, _ := io.ReadAll(res.Body) // 仅读取错误信息
+		return nil, fmt.Errorf("invalid status code: %d, body: %s", res.StatusCode, body)
+	}
+
+	// 直接返回 Body 的流式接口
+	return res.Body, nil
+}
+
 func preparePayload(params []any) ([]byte, error) {
 	// prepare payload
 	j, err := json.Marshal(JsonRpcRequest{
@@ -153,27 +193,44 @@ func preparePayload(params []any) ([]byte, error) {
 //	return output, nil
 //}
 
+//func call[T any](c *RpcClient, ctx context.Context, params ...any) (T, error) {
+//	var output T
+//
+//	// rpc call
+//	body, err := c.Call(ctx, params...)
+//	if err != nil {
+//		return output, fmt.Errorf("rpc: call error, err: %v, body: %v", err, string(body))
+//	}
+//
+//	// Use streaming JSON decoding
+//	decoder := json.NewDecoder(bytes.NewReader(body))
+//
+//	// Incrementally decode the JSON response
+//	if err := decoder.Decode(&output); err != nil {
+//		if err == io.EOF {
+//			// No content to decode
+//			return output, nil
+//		}
+//		return output, fmt.Errorf("rpc: failed to json decode body, err: %v", err)
+//	}
+//	return output, nil
+//}
+
 func call[T any](c *RpcClient, ctx context.Context, params ...any) (T, error) {
 	var output T
 
-	// rpc call
-	body, err := c.Call(ctx, params...)
+	// 获取流式响应体
+	reader, err := c.CallStream(ctx, params...)
 	if err != nil {
-		return output, fmt.Errorf("rpc: call error, err: %v, body: %v", err, string(body))
+		return output, fmt.Errorf("rpc call failed: %v", err)
 	}
+	defer reader.Close()
 
-	// Use streaming JSON decoding
-	decoder := json.NewDecoder(bytes.NewReader(body))
-
-	// Incrementally decode the JSON response
+	// 流式 JSON 解码
+	decoder := jsoni.NewDecoder(reader)
 	if err := decoder.Decode(&output); err != nil {
-		if err == io.EOF {
-			// No content to decode
-			return output, nil
-		}
-		return output, fmt.Errorf("rpc: failed to json decode body, err: %v", err)
+		return output, fmt.Errorf("json decode failed: %v", err)
 	}
-	defer runtime.GC()
 
 	return output, nil
 }

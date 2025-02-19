@@ -1,6 +1,9 @@
 package rpc
 
-import "context"
+import (
+	"context"
+	"encoding/json"
+)
 
 type GetBlockResponse JsonRpcResponse[GetBlock]
 
@@ -16,9 +19,9 @@ type GetBlock struct {
 }
 
 type GetBlockTransaction struct {
-	Transaction any              `json:"transaction"`
+	Transaction json.RawMessage  `json:"transaction"` // 延迟解析
 	Meta        *TransactionMeta `json:"meta"`
-	Version     any              `json:"version"`
+	Version     json.RawMessage  `json:"version"` // 延迟解析
 }
 
 type GetBlockConfig struct {
