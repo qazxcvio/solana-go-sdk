@@ -47,16 +47,14 @@ type TransactionMetaInnerInstruction struct {
 }
 
 type Instruction struct {
-	Accounts    []string `json:"accounts,omitempty"`
-	Data        string   `json:"data,omitempty"`
-	ProgramID   string   `json:"programId"`
-	StackHeight int      `json:"stackHeight"`
-	Parsed      struct {
+	Accounts []string `json:"accounts,omitempty"`
+	Parsed   struct {
 		Info struct {
 			Authority   string `json:"authority"`
 			Destination string `json:"destination"`
 			Mint        string `json:"mint"`
 			Source      string `json:"source"`
+			Amount      string `json:"amount"`
 			TokenAmount struct {
 				Amount         string  `json:"amount"`
 				Decimals       int     `json:"decimals"`
