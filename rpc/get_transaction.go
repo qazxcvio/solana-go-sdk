@@ -10,7 +10,7 @@ type GetTransactionResponse JsonRpcResponse[*GetTransaction]
 type GetTransaction struct {
 	Slot        uint64           `json:"slot"`
 	Meta        *TransactionMeta `json:"meta"`
-	Transaction any              `json:"transaction"`
+	Transaction rpcTxTransaction `json:"transaction"`
 	BlockTime   *int64           `json:"blockTime"`
 	Version     any              `json:"version,omitempty"`
 }
@@ -25,7 +25,7 @@ type TransactionMeta struct {
 	PostTokenBalances []TransactionMetaTokenBalance `json:"postTokenBalances"`
 	//Rewards           []Reward                      `json:"rewards"`
 	//LogMessages          []string                          `json:"logMessages"`
-	//InnerInstructions []TransactionMetaInnerInstruction `json:"innerInstructions"`
+	InnerInstructions []TransactionMetaInnerInstruction `json:"innerInstructions"`
 	//LoadedAddresses      TransactionLoadedAddresses        `json:"loadedAddresses"`
 	//ReturnData           *ReturnData `json:"returnData"`
 	ComputeUnitsConsumed *uint64 `json:"computeUnitsConsumed"`
@@ -42,16 +42,39 @@ type TransactionMetaTokenBalance struct {
 
 // TransactionMetaInnerInstruction is a part of TransactionMeta
 type TransactionMetaInnerInstruction struct {
-	Index        uint64 `json:"index"`
-	Instructions []any  `json:"instructions"`
+	Index        uint64        `json:"index"`
+	Instructions []Instruction `json:"instructions"`
+}
+
+type Instruction struct {
+	Accounts    []string `json:"accounts,omitempty"`
+	Data        string   `json:"data,omitempty"`
+	ProgramID   string   `json:"programId"`
+	StackHeight int      `json:"stackHeight"`
+	Parsed      struct {
+		Info struct {
+			Authority   string `json:"authority"`
+			Destination string `json:"destination"`
+			Mint        string `json:"mint"`
+			Source      string `json:"source"`
+			TokenAmount struct {
+				Amount         string  `json:"amount"`
+				Decimals       int     `json:"decimals"`
+				UIAmount       float64 `json:"uiAmount"`
+				UIAmountString string  `json:"uiAmountString"`
+			} `json:"tokenAmount"`
+		} `json:"info"`
+		Type string `json:"type"`
+	} `json:"parsed,omitempty"`
+	Program string `json:"program,omitempty"`
 }
 
 // Instruction is a part of TransactionMetaInnerInstruction
-type Instruction struct {
-	ProgramIDIndex int    `json:"programIdIndex"`
-	Accounts       []int  `json:"accounts"`
-	Data           string `json:"data"`
-}
+//type Instruction struct {
+//	ProgramIDIndex int    `json:"programIdIndex"`
+//	Accounts       []int  `json:"accounts"`
+//	Data           string `json:"data"`
+//}
 
 type TransactionLoadedAddresses struct {
 	Writable []string `json:"writable"`
