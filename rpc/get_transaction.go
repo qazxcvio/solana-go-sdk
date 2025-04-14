@@ -17,7 +17,7 @@ type GetTransaction struct {
 
 // TransactionMeta is a part of GetTransactionResult
 type TransactionMeta struct {
-	Err               map[string]interface{}        `json:"err"`
+	Err               any                           `json:"err"`
 	Fee               uint64                        `json:"fee"`
 	PreBalances       []int64                       `json:"preBalances"`
 	PostBalances      []int64                       `json:"postBalances"`
